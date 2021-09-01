@@ -1,0 +1,35 @@
+source 'https://github.com/CocoaPods/Specs.git'
+require_relative '../node_modules/react-native/scripts/react_native_pods'
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+
+platform :ios, '11.0'
+
+def share_pods
+  config = use_native_modules!
+  use_react_native!(:path => config["reactNativePath"])
+
+  # pod 'Fabric', '~> 1.10.2'
+  # pod 'Crashlytics', '~> 3.14.0'
+
+  #  Below ONLY REQ. DEV BUILD
+  permissions_path = '../node_modules/react-native-permissions/ios'
+
+
+# Add the pods for any other Firebase products you want to use in your app
+# For example, to use Firebase Authentication and Cloud Firestore
+pod 'Firebase/Auth'
+pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
+
+end
+
+target 'BlogApp' do
+  share_pods
+end
+
+post_install do |installer|
+  # react_native_post_install(installer)
+  installer.pods_project.build_configurations.each do |config|
+    config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+  end
+end
